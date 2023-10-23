@@ -6,9 +6,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class HelloController {
     List<Document> db = new ArrayList<>();
@@ -112,5 +114,135 @@ public class HelloController {
         }
         board.setText(answer);
     }
+    @FXML
+    protected void Laba4() {
+        try
+        {
+            String name_file_bytes = "/Users/edavkinstepan/Desktop/Java/Laba 3/Laba3/outputBytes.txt";
+            String name_file_string = "/Users/edavkinstepan/Desktop/Java/Laba 3/Laba3/outputString.txt";
+            String name_file_ser = "/Users/edavkinstepan/Desktop/Java/Laba 3/Laba3/output_ser.txt";
+            Scanner in = new Scanner(System.in);//writeFormat
+            PrintWriter out = new PrintWriter(System.out);
+            int menu = 0;
+            while (menu==0) {
+                System.out.println("Список документов:");
+                for (int i=0; i<db.size();i++)
+                {
+                    WorkFlow.writeFormat(db.get(i), out);
+                }
+                out.flush();
+                System.out.println("Меню программы:");
+                System.out.println("1 - Добавить документ");
+                System.out.println("2 - Байтовый");
+                System.out.println("3 - Текстовый");
+                System.out.println("4 - Байтовый. Сериализация");
+                System.out.println("0 - Выход");
+                int action = Integer.parseInt(in.nextLine());
+                switch (action)
+                {
+                    case 1:
+                        try{
+                            System.out.println("Введите следующие значения в троку через пробел:");
+                            System.out.println("0 - Article");
+                            System.out.println("1 - Book");
+                            System.out.println("Ввести надо\n название,\nобщее кол-во страниц\n кол-во страниц в разделах с мусором");
+                            db.add(WorkFlow.readFormat(in));}
+                        catch (Exception err)
+                        {
+                            System.out.println("Ошибка!"+ err.getMessage());
 
+                        }
+                        break;
+                    case 2:
+                        System.out.println("Байтовый. Запись");
+                        FileOutputStream outputStream = new FileOutputStream(name_file_bytes);
+                        for (int i=0;i<db.size();i++)
+                        {
+                            WorkFlow.output(db.get(i), outputStream);
+                        }
+                        outputStream.close();
+                        FileInputStream inputStream = new FileInputStream(name_file_bytes);
+                        List<Document> db_in = new ArrayList<>();
+                        while (inputStream.available() > 0) {
+                            db_in.add(WorkFlow.input(inputStream));
+                        }
+                        System.out.println("Массив считанный из байтового файла");
+                        for(int i = 0; i < db_in.size(); ++i) {
+                            System.out.println(db_in.get(i));
+                        }
+                        inputStream.close();
+                        break;
+                    case 3:
+                        System.out.println("Текстовый");
+                        FileWriter writer = new FileWriter(name_file_string, false);
+                        for (int i=0;i< db.size();i++) {
+                            WorkFlow.write(db.get(i), writer);
+                        }
+                        writer.flush();
+                        FileReader reader = new FileReader(name_file_string);
+
+                        List<Document> db_in2 = new ArrayList<>();
+
+                        try {
+                            while (true) {
+                                db_in2.add(WorkFlow.read(reader));
+                            }
+                        }
+                        catch(Exception ex) {
+                            System.out.print(ex.getMessage());
+                        }
+                        System.out.println("Массив считанный из текстового файла");
+                        for(int i = 0; i < db_in2.size(); ++i) {
+                            System.out.println(db_in2.get(i));
+                        }
+                        reader.close();
+                        break;
+                    case 4:
+                        System.out.println("Байтовый Сериализация");
+                        FileOutputStream outputStream_ser = new FileOutputStream(name_file_ser);
+                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream_ser);
+
+                        for (int i=0;i<db.size();i++)
+                        {
+                            WorkFlow.serialize(db.get(i), objectOutputStream);
+                        }
+                        objectOutputStream.close();
+                        FileInputStream fileInputStream = new FileInputStream(name_file_ser);
+                        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+
+                        List<Document> list = new ArrayList<Document>();
+                        int chek=0;
+                        try
+                        {
+                            while (true)
+                            {list.add(WorkFlow.deserialize(objectInputStream));}
+
+                        }
+                        catch(Exception ex){
+                            chek = 1;
+                        }
+                        if(chek==1)
+                        {
+                            System.out.println("Массив считанный из файла");
+                            for(int i = 0; i < list.size(); ++i) {
+                                System.out.println(list.get(i));
+                            }
+                        }
+                        break;
+                    case 0:
+                        System.out.println("Конец работы программы");
+                        menu = 1;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            in.close();
+            out.close();
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
 }

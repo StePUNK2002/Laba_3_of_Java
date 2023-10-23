@@ -1,7 +1,11 @@
 package com.example.laba3;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
 import java.util.Arrays;
 import java.util.Objects;
+import java.nio.ByteBuffer;
 
 public class Article implements Document {
     private int[] sections;
@@ -21,6 +25,11 @@ public class Article implements Document {
         this.marketingCount = marketingCount;
         this.sections = new int[count_articles];
     }
+    public Article(String title, int marketingCount, int[] massive) {
+        this.title = title;
+        this.marketingCount = marketingCount;
+        this.sections = massive;
+    }
 
     @Override
     public String getTitle() {
@@ -31,6 +40,12 @@ public class Article implements Document {
     public int getPagesCount() {
         return marketingCount;
     }
+
+    @Override
+    public int getLength() {
+        return sections.length;
+    }
+
     public void setArrayElement(int index, int value) {
         if (index < 0 || index >= sections.length)
         {
@@ -54,6 +69,39 @@ public class Article implements Document {
         {
             return sections[index];
         }
+    }
+
+    public void output(OutputStream out) throws Exception {
+        out.write(0);
+        // Преобразование и запись названия статьи
+        byte[] byte_title = this.title.getBytes();
+        byte[] byte_title_length = ByteBuffer.allocate(4).putInt(byte_title.length).array();
+        out.write(byte_title_length);
+        out.write(byte_title);
+
+        // Преобразование и запись количества страниц
+        byte[] byte_marketingCount = ByteBuffer.allocate(4).putInt(this.marketingCount).array();
+        out.write(byte_marketingCount);
+
+        // Преобразование и запись массива sections
+        byte[] byte_sections_length = ByteBuffer.allocate(4).putInt(this.sections.length).array();
+        out.write(byte_sections_length);
+        for(int i = 0; i < this.sections.length; ++i) {
+            out.write(ByteBuffer.allocate(4).putInt(this.sections[i]).array());
+        }
+    }
+
+    public void write(Writer out) throws IOException {
+        // Формирование строки с данными статьи
+        String str = "0 " + this.title + " " + this.marketingCount + " " + this.sections.length;
+
+        // Добавление каждого элемента массива sections в строку
+        for(int i = 0; i < this.sections.length; i++) {
+            str = str + " " + this.sections[i];
+        }
+
+        // Запись строки в символьный поток
+        out.write(str + "\n");
     }
 
     @Override
