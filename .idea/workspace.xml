@@ -4,16 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cafb172d-af5d-4a2b-99a2-422321124197" name="Changes" comment="Ready">
-      <change afterPath="$PROJECT_DIR$/outputBytes.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/outputString.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/output_ser.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/laba3/WorkFlow.java" afterDir="false" />
+    <list default="true" id="cafb172d-af5d-4a2b-99a2-422321124197" name="Changes" comment="Добавил изменения для 4 лабы.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/laba3/DocumentSynchronizer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/laba3/ReaderDocument.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/laba3/SyncReaderDocument.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/laba3/SyncWriterDocument.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/laba3/SynchronizedDocument.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/laba3/WriterDocument.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/laba3/Article.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/laba3/Article.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/laba3/Book.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/laba3/Book.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/laba3/Document.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/laba3/Document.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/laba3/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/laba3/HelloApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/laba3/HelloController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/laba3/HelloController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/laba3/WorkFlow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/laba3/WorkFlow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/laba3/hello-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/laba3/hello-view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -77,12 +81,31 @@
       <option name="project" value="LOCAL" />
       <updated>1696248087585</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Добавил изменения для 4 лабы.">
+      <created>1698063979466</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1698063979467</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Ready" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ready" />
+    <MESSAGE value="Добавил изменения для 4 лабы." />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавил изменения для 4 лабы." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/laba3/WorkFlow.java</url>
+          <line>149</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

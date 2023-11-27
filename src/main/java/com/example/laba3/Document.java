@@ -10,6 +10,7 @@ public interface Document {
     boolean isBenefit() throws Book.InvalidBookException, Article.InvalidArticleException;
     void setArrayElement(int index, int value);
     int getArrayElement(int index);
+    int[] getPages();
     void output(OutputStream out) throws Exception;
 
     void write(Writer out) throws IOException;

@@ -165,5 +165,7 @@ public class WorkFlow {
         }
         return null;
     }
-
+    public static Document synchronizedDocument(Document i) {
+        return new SynchronizedDocument(i);
+    }
 }

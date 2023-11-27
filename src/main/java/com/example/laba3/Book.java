@@ -72,6 +72,11 @@ public class Book implements Document {
         }
     }
 
+    @Override
+    public int[] getPages() {
+        return chapters;
+    }
+
 
     public void output(OutputStream out) throws Exception {
         out.write(1);

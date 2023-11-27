@@ -19,5 +19,6 @@
       <Label layoutX="306.0" layoutY="35.0" prefHeight="17.0" prefWidth="183.0" text="Вывод данных на экран" />
       <Label fx:id="board" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="184.0" layoutY="63.0" prefHeight="328.0" prefWidth="406.0" />
       <Button layoutX="11.0" layoutY="361.0" mnemonicParsing="false" onAction="#Laba4" prefHeight="25.0" prefWidth="167.0" text="Консоль" />
+      <TextArea fx:id="field" layoutX="192.0" layoutY="58.0" prefHeight="328.0" prefWidth="393.0" />
    </children>
 </Pane>

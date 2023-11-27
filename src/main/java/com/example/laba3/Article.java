@@ -71,6 +71,11 @@ public class Article implements Document {
         }
     }
 
+    @Override
+    public int[] getPages() {
+        return sections;
+    }
+
     public void output(OutputStream out) throws Exception {
         out.write(0);
         // Преобразование и запись названия статьи

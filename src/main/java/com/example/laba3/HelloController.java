@@ -1,6 +1,7 @@
 package com.example.laba3;
 
 import javafx.fxml.FXML;
+import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
@@ -23,6 +24,8 @@ public class HelloController {
     @FXML
     protected Label board;
     @FXML
+    protected TextArea field;
+    @FXML
     protected void CreateBook() {
         String[] pages = massive.getText().split(" ");
         Book book = new Book(name.getText(), Integer.parseInt(count.getText()), pages.length);
@@ -44,14 +47,55 @@ public class HelloController {
     }
     @FXML
     protected void Task1() {
+        try
+        {
+            field.setText("Лабораторная работа №5 Задание №1");
+            var shared = db.get(0);
+            var writer = new WriterDocument(shared, field);
+            var reader = new ReaderDocument(shared, field);
+
+            writer.setPriority(Thread.MAX_PRIORITY);
+            writer.start();
+
+            reader.setPriority(Thread.MIN_PRIORITY);
+            reader.start();
+
+        }
+        catch (Exception e)
+        {
+            field.appendText(e.getMessage());
+        }
+
+        /*
         String answer = "";
         for(int i = 0; i < db.size(); i++){
             answer = answer + db.get(i) + "\n";
         }
         board.setText(answer);
+
+         */
+
     }
     @FXML
     protected void Task2() {
+        try {
+            field.setText("Лабораторная работа №5 Задание №2");
+            var shared = db.get(0);
+            var sync = new DocumentSynchronizer(shared, field);
+
+            var writer = new SyncWriterDocument(sync);
+            var reader = new SyncReaderDocument(sync);
+
+            var writerThread = new Thread(writer);
+            var readerThread = new Thread(reader);
+
+            writerThread.start();
+            readerThread.start();
+        }
+        catch (Exception e) {
+            field.appendText(e.getMessage());
+        }
+        /*
         List<Document> goodDocuments = new ArrayList<>();
         List<Document> badDocuments = new ArrayList<>();
         for(int i = 0; i < db.size(); i++){
@@ -84,9 +128,41 @@ public class HelloController {
         }
         board.setText(answer);
 
+         */
+
     }
     @FXML
     protected void Task3() {
+        try {
+            field.setText("Лабораторная работа №5 Задание №3");
+            var shared = db.get(0);
+            var sync = WorkFlow.synchronizedDocument(shared);
+
+            var setOneThread = new Thread(() -> {
+                var arr = sync.getPages();
+                arr[0] = 1;
+                Platform.runLater(() -> field.appendText("\nsetOneThread"));
+            });
+
+            var setTwoThread = new Thread(() -> {
+                var arr = sync.getPages();
+                arr[0] = 2077;
+                Platform.runLater(() -> field.appendText("\nsetTwoThread"));
+            });
+
+            var readThread = new Thread(() -> {
+                var arr = sync.getPages();
+                Platform.runLater(() -> field.appendText("\nRead: " + arr[0]));
+            });
+
+            setOneThread.start();
+            readThread.start();
+            setTwoThread.start();
+        }
+        catch (Exception e) {
+            field.appendText(e.getMessage());
+        }
+        /*
         List<Article> articles = new ArrayList<>();
         List<Book> books = new ArrayList<>();
         for (int i = 0; i < db.size(); i++)
@@ -113,6 +189,8 @@ public class HelloController {
             answer = answer + books.get(i) + "\n";
         }
         board.setText(answer);
+
+         */
     }
     @FXML
     protected void Laba4() {
