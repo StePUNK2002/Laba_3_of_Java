@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 
-public interface Document {
+public interface Document extends Iterable<Integer> {
     String getTitle();
     int getPagesCount();
     int getLength();

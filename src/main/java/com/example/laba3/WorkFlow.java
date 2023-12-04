@@ -7,7 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 public class WorkFlow {
+    private static DocumentFactory factory;
 
+    public  static  void setFactory(DocumentFactory fac)
+    {
+        factory = fac;
+    }
+    public static Document createInstance()
+    {
+        return factory.createInstance();
+    }
+    public static Document createInstance(String name, int col, int[] pages) throws Exception {
+        return factory.createInstance(name, col, pages);
+    }
     //запись в байтовый поток
     static void output(Document o, OutputStream out) {
         try {
@@ -56,11 +68,13 @@ public class WorkFlow {
                 in.read(element);
                 massive[i] = ByteBuffer.wrap(element).getInt();
             }
+            return createInstance(title, pages, massive);
+            /*
             if (what[0] == 0) {
                 return new Article(title, pages, massive);
             } else {
                 return new Book(title, pages, massive);
-            }
+            } */
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -88,11 +102,14 @@ public class WorkFlow {
                 for (int i = 0; i < rr; i++) {
                     massive[i] = Integer.parseInt(parts[u + i + 4]);
                 }
+                return createInstance(title, pages, massive);
+                /*
                 if (what == 0) {
                     return new Article(title, pages, massive);
                 } else {
                     return new Book(title, pages, massive);
                 }
+                */
             }
             else throw new Exception("");
         } catch (Exception e) {
@@ -153,8 +170,12 @@ public class WorkFlow {
                 for (int i = 0; i < massive.length; i++) {
                     massive[i] = Integer.parseInt(ani[i + 3]);
                 }
+                return createInstance(title, pages, massive);
+
+                /*
                 if (what == 0) return new Article(title, pages, massive);
                 else return new Book(title, pages, massive);
+                */
             }
             else throw new Exception("Ошибка! Неизвестно что");
         }
@@ -168,4 +189,5 @@ public class WorkFlow {
     public static Document synchronizedDocument(Document i) {
         return new SynchronizedDocument(i);
     }
+    public static Document unmodifiableProduct(Document o) { return new UnmodifiableDocument(o); }
 }

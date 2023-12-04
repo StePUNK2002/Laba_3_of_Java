@@ -3,14 +3,15 @@ package com.example.laba3;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 import java.nio.ByteBuffer;
+import java.io.Serializable;
 
-public class Article implements Document {
+public class Article implements Document, Serializable {
     private int[] sections;
     private String title;
     private int marketingCount;
+    private List<Integer> pagesList;
     public Article()
     {
         this.title = "Название по умолчанию";
@@ -18,17 +19,13 @@ public class Article implements Document {
         this.sections = new int[2];
         setArrayElement(0, 200);
         setArrayElement(1, 200);
-    }
-
-    public Article(String title, int marketingCount, int count_articles) {
-        this.title = title;
-        this.marketingCount = marketingCount;
-        this.sections = new int[count_articles];
+        this.pagesList = pagesToList();
     }
     public Article(String title, int marketingCount, int[] massive) {
         this.title = title;
         this.marketingCount = marketingCount;
         this.sections = massive;
+        pagesList = pagesToList();
     }
 
     @Override
@@ -74,6 +71,15 @@ public class Article implements Document {
     @Override
     public int[] getPages() {
         return sections;
+    }
+
+    private List<Integer> pagesToList() {
+        List<Integer> pagesList = new ArrayList<Integer>();
+        for (int i = 0; i < sections.length; i++)
+        {
+            pagesList.add(sections[i]);
+        }
+        return pagesList;
     }
 
     public void output(OutputStream out) throws Exception {
@@ -157,4 +163,40 @@ public class Article implements Document {
             super(message);
         }
     }
+    @Override
+    public Iterator<Integer> iterator(){
+        return new Article.Itr();
+    }
+    private class Itr implements Iterator<Integer>
+    {
+        int cursor = 0;
+        int lastRet = -1;
+        Itr() {
+
+        }
+        @Override
+        public boolean hasNext() {
+            return cursor != Article.this.pagesList.size();
+        }
+        @Override
+        public Integer next() {
+            int i = cursor;
+            if (i >= Article.this.pagesList.size())
+            {
+                throw new NoSuchElementException();
+            }
+            cursor = i + 1;
+            return Article.this.pagesList.get(lastRet = i);
+        }
+        @Override
+        public  void remove() {
+            if (lastRet < 0) {
+                throw new IllegalStateException();
+            }
+            Article.this.pagesList.remove(lastRet);
+            cursor = lastRet;
+            lastRet = -1;
+        }
+    }
+
 }

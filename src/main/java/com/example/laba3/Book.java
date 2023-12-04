@@ -3,14 +3,16 @@ package com.example.laba3;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
-import java.util.Arrays;
+import java.util.*;
 import java.nio.ByteBuffer;
-import java.util.Objects;
+import java.io.Serializable;
 
-public class Book implements Document {
+public class Book implements Document, Serializable {
     private int[] chapters;
     private String title;
     private int pagesCount;
+
+    private List<Integer> pagesList;
 
     public Book()
     {
@@ -21,17 +23,21 @@ public class Book implements Document {
         setArrayElement(1, 300);
     }
 
-    public Book(String title, int pagesCount, int count_books) {
-        this.title = title;
-        this.pagesCount = pagesCount;
-        this.chapters = new int[count_books];
-    }
     public Book(String title, int pagesCount, int[] massive) {
         this.title = title;
         this.pagesCount = pagesCount;
         this.chapters = massive;
+        this.pagesList = pagesToList();
     }
 
+    private List<Integer> pagesToList() {
+        List<Integer> pagesList = new ArrayList<Integer>();
+        for (int i = 0; i < chapters.length; i++)
+        {
+            pagesList.add(chapters[i]);
+        }
+        return pagesList;
+    }
     @Override
     public String getTitle() {
         return title;
@@ -74,7 +80,7 @@ public class Book implements Document {
 
     @Override
     public int[] getPages() {
-        return chapters;
+        return chapters ;
     }
 
 
@@ -151,6 +157,44 @@ public class Book implements Document {
     public class InvalidPagesArrayException extends RuntimeException {
         public InvalidPagesArrayException(String message) {
             super(message);
+        }
+    }
+    @Override
+    public Iterator<Integer> iterator() {
+        return new Itr();
+    }
+    private class Itr implements Iterator<Integer> {
+        int cursor = 0;
+        int lastRet = -1;
+        Itr()
+        {
+
+        }
+        @Override
+        public boolean hasNext()
+        {
+            return cursor != Book.this.pagesList.size();
+        }
+        @Override
+        public  Integer next()
+        {
+            int i = cursor;
+            if (i >= Book.this.pagesList.size())
+            {
+                throw  new NoSuchElementException();
+            }
+            cursor = i + 1;
+            return Book.this.pagesList.get(lastRet = i);
+        }
+        @Override
+        public void remove() {
+            if (lastRet < 0)
+            {
+                throw new IllegalStateException();
+            }
+            Book.this.pagesList.remove(lastRet);
+            cursor = lastRet;
+            lastRet = -1;
         }
     }
 

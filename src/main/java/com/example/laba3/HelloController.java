@@ -8,10 +8,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class HelloController {
     List<Document> db = new ArrayList<>();
@@ -28,27 +25,47 @@ public class HelloController {
     @FXML
     protected void CreateBook() {
         String[] pages = massive.getText().split(" ");
-        Book book = new Book(name.getText(), Integer.parseInt(count.getText()), pages.length);
+        int[] vedro = new int[pages.length];
         for (int i = 0; i < pages.length; i++)
         {
-            book.setArrayElement(i, Integer.parseInt(pages[i]));
+            vedro[i] = Integer.parseInt(pages[i]);
         }
+        Book book = new Book(name.getText(), Integer.parseInt(count.getText()), vedro);
         db.add(book);
     }
     @FXML
     protected void CreateArticle() {
         String[] pages = massive.getText().split(" ");
-        Article article = new Article(name.getText(), Integer.parseInt(count.getText()), pages.length);
+        int[] vedro = new int[pages.length];
         for (int i = 0; i < pages.length; i++)
         {
-            article.setArrayElement(i, Integer.parseInt(pages[i]));
+            vedro[i] = Integer.parseInt(pages[i]);
         }
+        Article article = new Article(name.getText(), Integer.parseInt(count.getText()), vedro);
         db.add(article);
     }
     @FXML
     protected void Task1() {
         try
         {
+            field.setText("Лабораторная работа №6 Итератор");
+            var articleFactory = new ArticleFactory();
+            WorkFlow.setFactory(articleFactory);
+
+            var fromInst = WorkFlow.createInstance();
+            Platform.runLater(() -> field.appendText("\nFor:"));
+            for (Integer i : fromInst) {
+                Platform.runLater(() -> field.appendText("\nЭлемент: " + i));
+            }
+            Platform.runLater(() -> field.appendText("\nWhile: "));
+            Iterator<Integer> iter = fromInst.iterator();
+            while (iter.hasNext()) {
+                var elem = iter.next();
+                Platform.runLater(() -> field.appendText("\nЭлемент: " + elem));
+                iter.remove();
+            }
+
+            /*
             field.setText("Лабораторная работа №5 Задание №1");
             var shared = db.get(0);
             var writer = new WriterDocument(shared, field);
@@ -59,6 +76,8 @@ public class HelloController {
 
             reader.setPriority(Thread.MIN_PRIORITY);
             reader.start();
+
+             */
 
         }
         catch (Exception e)
@@ -79,6 +98,19 @@ public class HelloController {
     @FXML
     protected void Task2() {
         try {
+            field.setText("Лабораторная работа №6 Декоратор");
+            var bookFactory = new BookFactory();
+            WorkFlow.setFactory(bookFactory);
+
+            var fromInst = WorkFlow.createInstance();
+            var unmodifiableBook = WorkFlow.unmodifiableProduct(fromInst);
+            Platform.runLater(() -> field.appendText("\nПопытка получить объект..."));
+
+            Platform.runLater(() -> field.appendText("\nНазвание:: " + unmodifiableBook.getTitle()));
+
+            Platform.runLater(() -> field.appendText("\nПопытка изменить объект..."));
+            unmodifiableBook.setArrayElement(0, 1000);
+            /*
             field.setText("Лабораторная работа №5 Задание №2");
             var shared = db.get(0);
             var sync = new DocumentSynchronizer(shared, field);
@@ -91,9 +123,12 @@ public class HelloController {
 
             writerThread.start();
             readerThread.start();
+
+             */
         }
-        catch (Exception e) {
-            field.appendText(e.getMessage());
+        catch (UnsupportedOperationException e) {
+            Platform.runLater(() -> field.appendText("\n" + e.getMessage()));
+
         }
         /*
         List<Document> goodDocuments = new ArrayList<>();
@@ -134,6 +169,100 @@ public class HelloController {
     @FXML
     protected void Task3() {
         try {
+            String name_file_bytes = "/Users/edavkinstepan/Desktop/Java/Laba 3/Laba3/outputBytes.txt";
+            String name_file_string = "/Users/edavkinstepan/Desktop/Java/Laba 3/Laba3/outputString.txt";
+            String name_file_ser = "/Users/edavkinstepan/Desktop/Java/Laba 3/Laba3/output_ser.txt";
+            var articleFactory = new ArticleFactory();
+            var bookFactory = new BookFactory();
+            field.setText("Лабораторная работа №6\n Проверка статических методов записи и чтения");
+
+            WorkFlow.setFactory(articleFactory);
+            db.add(WorkFlow.createInstance());
+            db.add(WorkFlow.createInstance());
+            db.add(WorkFlow.createInstance());
+
+            WorkFlow.setFactory(bookFactory);
+            db.add(WorkFlow.createInstance());
+
+            Platform.runLater(() -> field.appendText("\nОбъекты успешно созданы..."));
+            FileOutputStream outputStream = new FileOutputStream(name_file_bytes);
+            for (int i=0;i<db.size();i++)
+            {
+                WorkFlow.output(db.get(i), outputStream);
+            }
+            outputStream.close();
+            Platform.runLater(() -> field.appendText("\nОбъекты успешно записаны в байтовый поток..."));
+            FileWriter writer = new FileWriter(name_file_string, false);
+            for (int i=0; i < db.size(); i++) {
+                WorkFlow.write(db.get(i), writer);
+            }
+            writer.flush();
+            Platform.runLater(() -> field.appendText("\nОбъекты успешно записаны в текстовый поток..."));
+
+            FileOutputStream outputStream_ser = new FileOutputStream(name_file_ser);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream_ser);
+
+            for (int i=0;i<db.size();i++)
+            {
+                WorkFlow.serialize(db.get(i), objectOutputStream);
+            }
+            objectOutputStream.close();
+
+            Platform.runLater(() -> field.appendText("\nОбъекты успешно сериализованы\nи записаны в байтовый поток..."));
+
+            field.setText("\nПроверка статических методов чтения");
+            List<Document> db_in = new ArrayList<>();
+            FileInputStream inputStream = new FileInputStream(name_file_bytes);
+            while (inputStream.available() > 0) {
+                db_in.add(WorkFlow.input(inputStream));
+            }
+            Platform.runLater(() -> field.appendText("\nМассив считанный из байтового файла"));
+            for(int i = 0; i < db_in.size(); ++i) {
+                var elem = db_in.get(i);
+                Platform.runLater(() -> field.appendText("\n" + elem));
+            }
+            inputStream.close();
+
+            db_in.clear();
+            FileReader reader = new FileReader(name_file_string);
+            try {
+                while (true) {
+                    db_in.add(WorkFlow.read(reader));
+                }
+            }
+            catch(Exception ex) {
+                Platform.runLater(() -> field.appendText("\n" + ex.getMessage()));
+            }
+            Platform.runLater(() -> field.appendText("\nМассив считанный из текстового файла"));
+            for(int i = 0; i < db_in.size(); ++i) {
+                var elem = db_in.get(i);
+                Platform.runLater(() -> field.appendText("\n" + elem));
+            }
+            reader.close();
+
+            db_in.clear();
+            FileInputStream fileInputStream = new FileInputStream(name_file_ser);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            int chek=0;
+            try
+            {
+                while (true)
+                {db_in.add(WorkFlow.deserialize(objectInputStream));}
+            }
+            catch(Exception ex){
+                chek = 1;
+            }
+            if(chek==1)
+            {
+                Platform.runLater(() -> field.appendText("\n\nДесериализованный массив считанный из файла"));
+                for(int i = 0; i < db_in.size(); ++i) {
+                    var elem = db_in.get(i);
+                    Platform.runLater(() -> field.appendText("\n" + elem));
+                }
+            }
+            objectInputStream.close();
+
+            /*
             field.setText("Лабораторная работа №5 Задание №3");
             var shared = db.get(0);
             var sync = WorkFlow.synchronizedDocument(shared);
@@ -158,10 +287,13 @@ public class HelloController {
             setOneThread.start();
             readThread.start();
             setTwoThread.start();
+
+             */
         }
         catch (Exception e) {
-            field.appendText(e.getMessage());
+            Platform.runLater(() -> field.appendText("\n" + e.getMessage()));
         }
+
         /*
         List<Article> articles = new ArrayList<>();
         List<Book> books = new ArrayList<>();
